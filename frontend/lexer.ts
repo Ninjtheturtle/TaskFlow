@@ -1,4 +1,5 @@
 export enum TokenType {
+	Null,
 	Number,
 	Identifier,
 	Equals,
@@ -10,9 +11,9 @@ export enum TokenType {
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-	"let": TokenType.Let,
+	let: TokenType.Let,
+	null: TokenType.Null,
 };
-
 
 export interface Token {
 	value: string,
@@ -68,10 +69,10 @@ export function tokenize (sourceCode: string): Token[] {
 				}
 
 				const reserved = KEYWORDS[ident];
-				if (reserved == undefined) {
-				tokens.push(token(ident, TokenType.Identifier));
-				} else {
+				if (typeof reserved == "number") {
 					tokens.push(token(ident, reserved));
+				} else {
+					tokens.push(token(ident, TokenType.Identifier));
 				}	
 			} else if (isskippable(src[0])) {
 				src.shift();
@@ -84,9 +85,4 @@ export function tokenize (sourceCode: string): Token[] {
 
 	tokens.push({type: TokenType.EOF, value: "EndOfFile"});
 	return tokens;
-}
-
-const source = await Deno.readTextFile("./text.txt");
-for (const token of tokenize(source)) {
-	console.log(token);
 }
