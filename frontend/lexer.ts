@@ -2,15 +2,18 @@ export enum TokenType {
 	Number,
 	Identifier,
 	Equals,
+	Semicolon,
 	OpenParen, 
 	CloseParen,
 	BinaryOperator,
-	Let,
+	Let, 
+	Const,
 	EOF,
 }
 
 const KEYWORDS: Record<string, TokenType> = {
 	let: TokenType.Let,
+	const: TokenType.Const,
 };
 
 export interface Token {
@@ -52,7 +55,9 @@ export function tokenize (sourceCode: string): Token[] {
 			tokens.push(token(src.shift(), TokenType.BinaryOperator));
 		} else if (src[0] == '='){
 			tokens.push(token(src.shift(), TokenType.Equals));
-		} else {
+		} else if (src[0] == ';'){
+			tokens.push(token(src.shift(), TokenType.Semicolon));
+		}else {
 			if (isint(src[0])) {
 				let num = "";
 				while (src.length > 0 && isint(src[0])) {
