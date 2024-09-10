@@ -1,13 +1,22 @@
 export enum TokenType {
+	//Literal
 	Number,
 	Identifier,
+
+	// Keywords
+	Let, 
+	Const,
+
+	// Grouping operators
 	Equals,
+	Comma, 
+	Colon,
 	Semicolon,
 	OpenParen, 
 	CloseParen,
+	OpenBrace,
+	CloseBrace,
 	BinaryOperator,
-	Let, 
-	Const,
 	EOF,
 }
 
@@ -30,7 +39,7 @@ function isalpha (src: string) {
 }
 
 function isskippable (str: string) {
-	return str == " " || str == "\n" || str == "\t";
+	return str == " " || str == "\n" || str == "\t" || str == "\r";
 }
 
 function isint (str: string) {
@@ -51,13 +60,32 @@ export function tokenize (sourceCode: string): Token[] {
 			tokens.push(token(src.shift(), TokenType.OpenParen));
 		} else if (src[0] == ')'){
 			tokens.push(token(src.shift(), TokenType.CloseParen));
-		} else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/'|| src[0] == '%'){
+		} 
+
+		else if (src[0] == '{'){
+			tokens.push(token(src.shift(), TokenType.OpenBrace));
+		} 
+
+		else if (src[0] == '}'){
+			tokens.push(token(src.shift(), TokenType.CloseBrace));
+		} 
+
+		// Binary Operators
+		else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/'|| src[0] == '%'){
 			tokens.push(token(src.shift(), TokenType.BinaryOperator));
 		} else if (src[0] == '='){
 			tokens.push(token(src.shift(), TokenType.Equals));
 		} else if (src[0] == ';'){
 			tokens.push(token(src.shift(), TokenType.Semicolon));
-		}else {
+		}
+		else if (src[0] == ':'){
+			tokens.push(token(src.shift(), TokenType.Colon));
+		}
+		else if (src[0] == ','){
+			tokens.push(token(src.shift(), TokenType.Comma));
+		}
+
+		else {
 			if (isint(src[0])) {
 				let num = "";
 				while (src.length > 0 && isint(src[0])) {
