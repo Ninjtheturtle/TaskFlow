@@ -54,6 +54,3 @@ print (adder(10, 5))
 - `main.ts` — Entry point
 - `test.txt` — Example script
 
-## License
-
-MIT
